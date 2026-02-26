@@ -336,10 +336,9 @@ with st.expander("⚙️ Admin (protegido)"):
     with col2:
         st.markdown("### 🔐 Área administrativa")
     
-    password = st.text_input("Contraseña de administrador", type="password", key="pass_plan")
+    password = st.text_input("Contraseña de administrador", type="password")
     
-    # Misma contraseña para consistencia
-    CONTRASENA_ADMIN = "Zuom6894"
+    CONTRASENA_ADMIN = "Villarreal2026"  # Misma contraseña
     
     if password == CONTRASENA_ADMIN:
         st.success("✅ Acceso concedido")
@@ -348,13 +347,17 @@ with st.expander("⚙️ Admin (protegido)"):
         
         with col_a1:
             st.markdown("**📊 Estado actual:**")
-            if os.path.exists(ARCHIVO_LICENCIAS):
-                with open(ARCHIVO_LICENCIAS, "r") as f:
+            # 👇 ESTA ES LA ÚNICA LÍNEA QUE CAMBIA (nombre del archivo)
+            archivo_licencias = "licencias_plan_maestro.json"
+            
+            if os.path.exists(archivo_licencias):
+                with open(archivo_licencias, "r") as f:
                     datos = json.load(f)
                 st.info(f"📁 Licencias registradas: {len(datos)}")
                 
                 # Botón de descarga
-                with open(ARCHIVO_LICENCIAS, "rb") as f:
+                with open(archivo_licencias, "rb") as f:
+                    from datetime import datetime
                     st.download_button(
                         label="📥 Descargar licencias_plan_maestro.json",
                         data=f,
@@ -366,16 +369,18 @@ with st.expander("⚙️ Admin (protegido)"):
                 st.warning("⚠️ No hay archivo de licencias aún")
         
         with col_a2:
-            st.markdown("**📝 Registro de activaciones:**")
-            if os.path.exists(ARCHIVO_LICENCIAS):
-                with open(ARCHIVO_LICENCIAS, "r") as f:
+            st.markdown("**📝 Últimas activaciones:**")
+            archivo_licencias = "licencias_plan_maestro.json"
+            if os.path.exists(archivo_licencias):
+                with open(archivo_licencias, "r") as f:
                     datos = json.load(f)
                 if datos:
-                    for codigo, maquinas in list(datos.items())[:5]:
+                    items = list(datos.items())[-5:]
+                    for codigo, maquinas in items:
                         st.markdown(f"- **{codigo}**: {len(maquinas)} máquina(s)")
                 else:
                     st.markdown("*Sin datos*")
             else:
-                st.markdown("*Sin datos*")
+                st.markdown("*Sin activaciones*")
     elif password != "":
         st.error("❌ Contraseña incorrecta")
