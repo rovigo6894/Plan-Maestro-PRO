@@ -338,7 +338,7 @@ with st.expander("⚙️ Admin (protegido)"):
     
     password = st.text_input("Contraseña de administrador", type="password")
     
-    CONTRASENA_ADMIN = "Villarreal2026"  # Misma contraseña
+    CONTRASENA_ADMIN = "Zuom6894"  # Misma contraseña
     
     if password == CONTRASENA_ADMIN:
         st.success("✅ Acceso concedido")
