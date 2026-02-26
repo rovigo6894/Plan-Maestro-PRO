@@ -324,3 +324,58 @@ if st.button("🚀 Calcular Plan", type="primary", use_container_width=True):
 
 st.divider()
 st.caption("© Ing. Roberto Villarreal - Plan Maestro PRO con licencia por máquina")
+
+# ============================================
+# DESCARGA DE ARCHIVOS (SOLO PARA ADMIN)
+# ============================================
+
+with st.expander("⚙️ Admin (protegido)"):
+    col1, col2 = st.columns([1, 3])
+    with col1:
+        st.image("https://img.icons8.com/color/48/000000/admin-settings-male.png", width=50)
+    with col2:
+        st.markdown("### 🔐 Área administrativa")
+    
+    password = st.text_input("Contraseña de administrador", type="password", key="pass_plan")
+    
+    # Misma contraseña para consistencia
+    CONTRASENA_ADMIN = "Villarreal2026"
+    
+    if password == CONTRASENA_ADMIN:
+        st.success("✅ Acceso concedido")
+        
+        col_a1, col_a2 = st.columns(2)
+        
+        with col_a1:
+            st.markdown("**📊 Estado actual:**")
+            if os.path.exists(ARCHIVO_LICENCIAS):
+                with open(ARCHIVO_LICENCIAS, "r") as f:
+                    datos = json.load(f)
+                st.info(f"📁 Licencias registradas: {len(datos)}")
+                
+                # Botón de descarga
+                with open(ARCHIVO_LICENCIAS, "rb") as f:
+                    st.download_button(
+                        label="📥 Descargar licencias_plan_maestro.json",
+                        data=f,
+                        file_name=f"licencias_plan_{datetime.now().strftime('%Y%m%d')}.json",
+                        mime="application/json",
+                        use_container_width=True
+                    )
+            else:
+                st.warning("⚠️ No hay archivo de licencias aún")
+        
+        with col_a2:
+            st.markdown("**📝 Registro de activaciones:**")
+            if os.path.exists(ARCHIVO_LICENCIAS):
+                with open(ARCHIVO_LICENCIAS, "r") as f:
+                    datos = json.load(f)
+                if datos:
+                    for codigo, maquinas in list(datos.items())[:5]:
+                        st.markdown(f"- **{codigo}**: {len(maquinas)} máquina(s)")
+                else:
+                    st.markdown("*Sin datos*")
+            else:
+                st.markdown("*Sin datos*")
+    elif password != "":
+        st.error("❌ Contraseña incorrecta")
